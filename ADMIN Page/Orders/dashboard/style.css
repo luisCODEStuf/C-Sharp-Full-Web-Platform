@@ -1,0 +1,408 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+
+*{
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+body{
+        font-family: "Roboto Mono", monospace;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+
+    background-color: rgb(37, 37, 37);
+    color: white;
+}
+
+header {
+    width: 100%;
+    height: 5vh;
+}
+
+header>nav {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-bottom: solid 1px aquamarine;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+
+}
+
+header>nav>a {
+    text-decoration: none;
+    color: white;
+
+}
+
+header>nav>a:hover {
+    text-decoration:underline;
+}
+header > nav > #alternate-bar{
+    padding: 4px;
+    background-color: rgb(61, 61, 61);
+    border: none;
+    border-radius: 4px;
+    width: auto;
+    height: auto;
+    color: white;
+}
+header > nav >  #return-page{
+    position: absolute;
+    top: 1vh;
+    left: 1vh;
+    width: 3vh;
+    height: 3vh;
+    background-color: transparent;
+    border:solid rgb(87, 87, 87) 1px;
+    color: aquamarine;
+    border-radius: 1vh;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    transition: 0.3s ease-in;
+}
+header > nav >  #return-page:hover{
+    background-color: rgb(87, 87, 87);
+}
+header > nav >  #return-page > a{
+    color: aquamarine;
+    text-decoration: none;
+}
+
+
+main {
+    display: grid;
+    grid-template-columns: 1fr 30vw;
+    width: 100%;
+    height: 100vh;
+    margin-top: 2%;
+}
+main.sidebar-hidden{
+    grid-template-columns: 1fr 0px;
+    transition: grid-template-columns 0.3s ease-in;
+
+}
+
+
+.vertical-bar {
+    background-color: rgb(37, 37, 37);
+    width: 30vw;
+    position: fixed;
+    right: 0px;
+    top: 5vh;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border: none;
+    border-left: 1px solid gray;
+    transform: 0.3s ease;
+}
+.vertical-bar.hidden{
+    transform: translateX(100%);
+    transition: 0.3s ease-in;
+}
+.vertical-bar #id-separator{
+    height: 1px;
+    width: 100%;
+    border: solid 1px aquamarine;
+    border-top: none;
+    margin-block: 15px;
+}
+.vertical-bar>input {
+    width: 90%;
+    height: 40px;
+    background-color:rgb(37, 37, 37);
+    border: solid rgb(80,80,80) 1px;
+    border-radius: 10px;
+    padding-inline: 10px;
+}
+
+.vertical-bar  input:focus{
+      outline: none;
+    border-color: aquamarine;
+    background-color: rgb(65, 65, 65);
+    box-shadow: 0 0 0 3px rgba(127, 255, 212, 0.1);
+}
+
+.vertical-bar>label {
+    width: 20vw;
+    max-width: 250px;
+    color: aquamarine;
+    margin-top: 30px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.vertical-bar>#Save-changes {
+    background-color: aquamarine;
+    margin-block: 50px;
+    width: 70%;
+    height: 50px;
+    border: none;
+    border-radius: 12px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.Order-container{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+.Order-container > #generate-orders{
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    height: 7vh;
+    margin-bottom: 40px;
+    border: solid 1px rgb(87, 87, 87);
+    background-color:transparent;
+    border-radius: 1vh;
+    color: white;
+    font-family: "Roboto Mono", monospace;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+    font-size: clamp(15px,2vh,4vh);
+    transition: 0.3s ease;
+}
+.Order-container > #generate-users:hover{
+    border: solid aquamarine 1px;
+    background-color: rgb(87, 87, 87);
+}
+
+.pages{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-block: 40px;
+}
+.pages > button {
+    height: 30px;
+    width: 30px;
+    background-color: transparent;
+    border:solid rgb(87, 87, 87) 1px;
+    border-radius: 5px;
+    color: aquamarine;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-inline: 10px;
+    transition: 0.3s ease-in-out;
+}
+.pages > button:hover{
+   border: solid aquamarine 1px;
+   background-color: rgb(87, 87, 87);
+}
+
+
+#order-box > label{
+    font-weight: 700;
+    color: aquamarine;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+#order-box{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    height: auto;
+    padding: 10px;
+    gap: 10px;
+    margin-block: 10px;
+    background-color: rgb(65, 65, 65);
+    border: solid rgb(87, 87, 87) 1px;
+    border-radius: 20px;
+}
+#order-box > div{
+   width: 100%;
+   padding: 10px;
+   background-color: transparent;
+   border: solid aquamarine 1px;
+   border-radius: 10px;
+}
+
+#order-box > #user-infos > #id{
+    display: flex;
+    flex-direction: row;
+    padding-inline: 10px;
+    padding-block: 5px;
+    color: white;
+    border: solid rgb(87, 87, 87) 1px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+#order-box > #user-infos > #id > label{
+   font-weight: 500;
+   color: rgb(107, 107, 107);
+}
+#order-box > #user-infos > #id> p{
+    font-size: 16px;
+}
+
+#order-box > #user-infos > #name{
+  display: flex;
+    flex-direction: row;
+    padding-inline: 10px;
+    padding-block: 5px;
+    border: solid rgb(87, 87, 87) 1px;
+    border-radius: 5px;
+    color: white;
+}
+#order-box > #user-infos > #name > label{
+   font-weight: 500;
+   color: rgb(107, 107, 107);
+}
+#order-box > #user-infos > #name > p{
+    font-size: 16px;
+}
+
+#order-box > #order-products{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+#order-box > #order-products > div , #order-box > #order-products > details > div{
+    border-radius: 5px;
+    border: solid rgb(107, 107, 107) 1px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width:100%;
+    padding-block: 10px;
+    padding-inline: 5px;
+    color: white;   
+    margin-bottom: 5px;
+}
+#order-box > #order-products > div > #id, #order-box > #order-products > details > div > #id{
+    width: 100%;
+    height: auto;
+    padding: 5px;
+    border: solid rgb(107, 107, 107) 1px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    padding-inline: 5px;
+    margin-bottom: 3px;
+}
+#order-box > #order-products > div > #name, #order-box > #order-products > details > div > #name{
+    margin-bottom: 3px;
+    width: 100%;
+    height: auto;
+    padding: 5px;
+    border: solid rgb(107, 107, 107) 1px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    padding-inline: 5px;
+}
+#order-box > #order-infos{
+    border: none;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    width: 100%;
+    height: auto;
+    padding: 5px;
+}
+#order-box > #order-infos > label{
+    font-weight: 500;
+    color: rgb(107, 107, 107);    
+}
+#order-box > #order-infos > label:last-of-type{
+    margin-left: auto;
+    margin-right: 0px;
+}
+#order-box > #order-infos > p{
+    font-size: 16px;
+}
+#order-state-color {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.status-pending #order-state-color {
+    background-color: #f39c12; 
+}
+
+.status-shipped #order-state-color {
+    background-color: #3498db; 
+}
+
+.status-delivered #order-state-color {
+    background-color: #2ecc71; 
+}
+
+.status-cancelled #order-state-color {
+    background-color: #e74c3c; 
+}
+
+.loading,
+.no-orders,
+.error {
+    text-align: center;
+    padding: 40px;
+    font-size: 16px;
+    color: #7f8c8d;
+}
+
+.error {
+    color: #e74c3c;
+}
+
+.pagination-info {
+    text-align: center;
+    padding: 20px;
+    color: #7f8c8d;
+    font-size: 14px;
+    border-top: 1px solid #ecf0f1;
+}
+
+.product-item {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    margin-bottom: 8px;
+}
+
+details {
+    margin-top: 10px;
+}
+
+details summary {
+    cursor: pointer;
+    padding: 10px;
+    background: rgba(127, 255, 212, 0.1);
+    border-radius: 6px;
+    text-align: center;
+    color: aquamarine;
+    font-weight: 600;
+    user-select: none;
+}
+
+details summary:hover {
+    background: rgba(127, 255, 212, 0.2);
+}
+
+details[open] summary {
+    margin-bottom: 10px;
+}

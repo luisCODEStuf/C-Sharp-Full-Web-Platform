@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+     <header>
+        <nav>
+            <button id="return-page"><a href=""><</a></button>
+            <a href="../Products/index.html">DashBoard</a>
+            <a href="../Orders/filter/index.html">Filters </a>
+            <button id="alternate-bar"><i class="fa-solid fa-bars"></i></button>
+        </nav>
+    </header>
+    
+
+    <main>
+        <div class="Order-container">
+            <button id="generate-orders">render orders</button>
+
+        <div class="orders">
+            <div id="order-box">
+                <div id="order-infos">
+                    <label for="">Order id: </label>
+                    <p>12534</p>
+                    <label for="">Creation date: </label>
+                    <p>12/34/56</p>
+                </div>
+                <label for="">User</label>
+                <div id="user-infos">
+                 <div id="id">
+                    <label for="">Id: </label>
+                    <p>17463</p>
+                 </div>
+                 <div id="name">
+                    <label for="">Name: </label>
+                    <p>User Name</p>
+                 </div>
+                </div>
+                <label for="">Products</label>
+                <div id="order-products">
+                    <div id="pd1">
+                        <div id="id">
+                            <label for="">Id:</label>
+                            <p>32414</p>
+                        </div>
+                        <div id="name">
+                            <label for="">Name:</label>
+                            <p>Product name</p>
+                        </div>
+                    </div>
+                    <div id="pd2">
+                        <div id="id">
+                            <label for="">Id:</label>
+                            <p>32414</p>
+                        </div>
+                        <div id="name">
+                            <label for="">Name:</label>
+                            <p>Product name</p>
+                        </div>
+                    </div>
+                    <div id="pd3">
+                        <div id="id">
+                            <label for="">Id:</label>
+                            <p>32414</p>
+                        </div>
+                        <div id="name">
+                            <label for="">Name:</label>
+                            <p>Product name</p>
+                        </div>
+                    </div>
+                <details>
+                    <div id="pd4">
+                        <div id="id">
+                            <label for="">Id:</label>
+                            <p>32414</p>
+                        </div>
+                        <div id="name">
+                            <label for="">Name:</label>
+                            <p>Product name</p>
+                        </div>
+                    </div>
+                    <div id="pd5">
+                        <div id="id">
+                            <label for="">Id:</label>
+                            <p>32414</p>
+                        </div>
+                        <div id="name">
+                            <label for="">Name:</label>
+                            <p>Product name</p>
+                        </div>
+                    </div>
+                    <div id="pd6">
+                        <div id="id">
+                            <label for="">Id:</label>
+                            <p>32414</p>
+                        </div>
+                        <div id="name">
+                            <label for="">Name:</label>
+                            <p>Product name</p>
+                        </div>
+                    </div>
+                    <summary>see more</summary>
+                </details>
+                </div>
+                <label for=""> status</label>
+                <div id="order-state">
+                    <p><span id="order-state-color"></span> shipped</p>
+                </div>
+
+                
+            </div>
+        </div>
+
+        
+        <div class="pages">
+            <button id="last-page"><</button>
+            <p id="page">1</p>
+            <button id="next-page">></button>
+        </div>
+        </div>
+
+        <div class="vertical-bar">
+            
+            <label for="">Id</label>
+            <input type="text" id="Id-input" placeholder="Order Id"> 
+            
+            <div id="id-separator"></div>
+
+            <label for="">Order state</label>
+            <input type="text" id="Order-input" placeholder="State"> 
+               
+
+            <button id="Save-changes">Save changes</button>
+        </div>
+    </main>
+    <script type="module" src="script.js"></script>
+</body>
+</html>
