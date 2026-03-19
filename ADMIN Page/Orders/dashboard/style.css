@@ -206,13 +206,13 @@ main.sidebar-hidden{
 }
 
 
-#order-box > label{
+.order-box > label{
     font-weight: 700;
     color: aquamarine;
     letter-spacing: 1px;
     text-transform: uppercase;
 }
-#order-box{
+.order-box{
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -227,7 +227,7 @@ main.sidebar-hidden{
     border: solid rgb(87, 87, 87) 1px;
     border-radius: 20px;
 }
-#order-box > div{
+.order-box > div{
    width: 100%;
    padding: 10px;
    background-color: transparent;
@@ -235,7 +235,7 @@ main.sidebar-hidden{
    border-radius: 10px;
 }
 
-#order-box > #user-infos > #id{
+.order-box > #user-infos > #id{
     display: flex;
     flex-direction: row;
     padding-inline: 10px;
@@ -245,15 +245,15 @@ main.sidebar-hidden{
     border-radius: 5px;
     margin-bottom: 5px;
 }
-#order-box > #user-infos > #id > label{
+.order-box > #user-infos > #id > label{
    font-weight: 500;
    color: rgb(107, 107, 107);
 }
-#order-box > #user-infos > #id> p{
+.order-box > #user-infos > #id> p{
     font-size: 16px;
 }
 
-#order-box > #user-infos > #name{
+.order-box > #user-infos > #name{
   display: flex;
     flex-direction: row;
     padding-inline: 10px;
@@ -262,20 +262,20 @@ main.sidebar-hidden{
     border-radius: 5px;
     color: white;
 }
-#order-box > #user-infos > #name > label{
+.order-box > #user-infos > #name > label{
    font-weight: 500;
    color: rgb(107, 107, 107);
 }
-#order-box > #user-infos > #name > p{
+.order-box > #user-infos > #name > p{
     font-size: 16px;
 }
 
-#order-box > #order-products{
+.order-box > #order-products{
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
 }
-#order-box > #order-products > div , #order-box > #order-products > details > div{
+.order-box > #order-products > div , .order-box > #order-products > details > div{
     border-radius: 5px;
     border: solid rgb(107, 107, 107) 1px;
     display: flex;
@@ -287,7 +287,7 @@ main.sidebar-hidden{
     color: white;   
     margin-bottom: 5px;
 }
-#order-box > #order-products > div > #id, #order-box > #order-products > details > div > #id{
+.order-box > #order-products > div > #id, .order-box > #order-products > details > div > #id{
     width: 100%;
     height: auto;
     padding: 5px;
@@ -298,7 +298,7 @@ main.sidebar-hidden{
     padding-inline: 5px;
     margin-bottom: 3px;
 }
-#order-box > #order-products > div > #name, #order-box > #order-products > details > div > #name{
+.order-box > #order-products > div > #name, .order-box > #order-products > details > div > #name{
     margin-bottom: 3px;
     width: 100%;
     height: auto;
@@ -309,7 +309,7 @@ main.sidebar-hidden{
     flex-direction: row;
     padding-inline: 5px;
 }
-#order-box > #order-infos{
+.order-box > #order-infos{
     border: none;
     display: flex;
     flex-wrap: wrap;
@@ -318,15 +318,15 @@ main.sidebar-hidden{
     height: auto;
     padding: 5px;
 }
-#order-box > #order-infos > label{
+.order-box > #order-infos > label{
     font-weight: 500;
     color: rgb(107, 107, 107);    
 }
-#order-box > #order-infos > label:last-of-type{
+.order-box > #order-infos > label:last-of-type{
     margin-left: auto;
     margin-right: 0px;
 }
-#order-box > #order-infos > p{
+.order-box > #order-infos > p{
     font-size: 16px;
 }
 #order-state-color {
