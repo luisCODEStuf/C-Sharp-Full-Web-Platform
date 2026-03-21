@@ -1,5 +1,6 @@
 using JwtBearer.Services;
 using JwtBearer.Models;
+using JwtBearer.Models.UpdateModels;
 using JwtBearer.Models.Register;
 using JwtBearer.Data;
 using Microsoft.EntityFrameworkCore;
@@ -174,6 +175,7 @@ app.MapGet("/api/admin/orders/all/{Page?}", async (AppDbContext db,int Page = 1)
         .Include(o => o.User )
         .Include(o => o.OrderItems)
            .ThenInclude(oi => oi.Product)
+        .OrderByDescending(o => o.CreatedAt)     
         .Select(o => new
         {
             o.Id,
@@ -338,6 +340,40 @@ app.MapPost("/auth/register", (RegisterRequest request) =>
     }
 });
 
+
+app.MapPut("/api/admin/orders/update", async (AppDbContext db, UpdateOrder upOrder) =>
+{  
+    HashSet<string> ValidStatuses = new(StringComparer.OrdinalIgnoreCase)
+    {
+    "pending",
+    "processing",
+    "shipped",
+    "delivered",
+    "cancelled"
+    };
+    if (!ValidStatuses.Contains(upOrder.NewState))
+    {
+        return Results.BadRequest("Status inválido");
+    }
+    if(upOrder.Id == 0)
+    {
+      return Results.BadRequest("Id invalido");   
+    }
+  
+   Order? selectedOrder = await db.Orders.FindAsync(upOrder.Id);
+
+   if(selectedOrder == null )
+    {
+        return Results.BadRequest($"O pedido com o id {upOrder.Id} nao existe");
+    }  
+   
+    selectedOrder.Status = upOrder.NewState;
+    selectedOrder.UpdatedAt = DateTime.UtcNow;
+
+    await db.SaveChangesAsync();
+   
+   return Results.Ok("status do pedido trocado com sucesso!");
+});
 
 app.MapPost("/api/admin/users/change", async (
     ChangeUser changeUserRequest, 

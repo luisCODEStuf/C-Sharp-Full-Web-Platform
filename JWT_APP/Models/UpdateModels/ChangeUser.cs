@@ -1,4 +1,4 @@
-namespace JwtBearer.Models;
+namespace JwtBearer.Models.UpdateModels;
 
 public record ChangeUser
 {

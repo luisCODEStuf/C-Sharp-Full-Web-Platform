@@ -108,7 +108,7 @@ async function changeClient(){
     {
         return;
     }
-    var IsAdmin;
+    let IsAdmin;
     if(clientRoles == "Admin"){
       IsAdmin == true
     }else if (clientRoles == "Not admin"){
