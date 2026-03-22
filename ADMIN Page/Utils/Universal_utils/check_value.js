@@ -10,4 +10,9 @@ export default function CheckValue(text,check_type){
      }
      return true
    }
+
+   if(check_type == "check_email"){
+      const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      return regex.test(text);
+   }
 }

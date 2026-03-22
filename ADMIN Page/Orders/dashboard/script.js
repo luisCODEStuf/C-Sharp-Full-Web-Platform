@@ -15,11 +15,16 @@ const nextPage = document.getElementById("next-page")
 let page = 0;
 
 
-SendChangesBtn.addEventListener("click",()=>{
+async function ChangeOrder(){
   const isNumber = CheckValue(idInput.value,"check_number")
   const isStatusValid = CheckValue(stateInput.value,"check_order_status")
+
   if(isNumber != NaN && isStatusValid){
-    fetch("http://localhost:5218/api/admin/orders/update",{
+
+  let confirmAlert = confirm(`Are you sure to update the status of the order with id ${idInput.value}`)
+
+   if (confirmAlert){
+    const Result = await fetch("http://localhost:5218/api/admin/orders/update",{
         method: "PUT",
         headers: {
             "Content-Type": "application/json"
@@ -29,8 +34,13 @@ SendChangesBtn.addEventListener("click",()=>{
             NewState: stateInput.value
         })
     })
+    if(!Result.ok){
+      alert("something gone wrong. you can try again")
+    }else{
+      alert("the order was sucessfully updated")
+    }
   }
-  
+  }
   if(!isNumber){
     alert("O valor do id é invalido")
   }
@@ -38,10 +48,12 @@ SendChangesBtn.addEventListener("click",()=>{
     alert("O status é invalido")
   }
   
+}
+
+
+SendChangesBtn.addEventListener("click",()=>{
+  ChangeOrder()
 })
-
-
-
 
 orderBTN.addEventListener("click",()=>{
     generateOrderBoxes(orderContainer,"http://localhost:5218/api/admin/orders/all")

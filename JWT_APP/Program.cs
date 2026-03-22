@@ -39,6 +39,9 @@ app.MapGet("/Users/all/filter/page{Page}", async (AppDbContext dbContext,int Pag
 {       
     var query = dbContext.Users.AsQueryable();
 
+        query = query.OrderBy(u => u.Id);
+
+
         var users = await query
         .Skip((Page - 1) * 5)
         .Take(5)
@@ -51,6 +54,7 @@ app.MapGet("/Users/all/filter/page{Page}", async (AppDbContext dbContext,int Pag
             CreatedAt = u.CreatedAt.ToString("dd/MM/yyyy HH:mm")
         })
         .ToListAsync();
+
 
         return Results.Ok(new
         {

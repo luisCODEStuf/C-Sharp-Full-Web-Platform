@@ -1,3 +1,4 @@
+import CheckValue from "../Utils/Universal_utils/check_value.js";
 import Generate_Users_Table from "../Utils/User_utils/Generate-Users.js";
 
 const Main = document.querySelector("main");
@@ -27,7 +28,8 @@ const changeName = document.getElementById('change-Name');
 const changeEmail = document.getElementById('change-Email');
 const changeRoles = document.getElementById('change-Roles');
 const saveChangesBtn = document.getElementById('Save-changes');
-const successMessage = document.getElementById("success-message")
+const errorMessage = document.getElementById("error-message")
+
 
 const filterBTN = document.getElementById("filter-btn")
 
@@ -93,6 +95,7 @@ async function loadUsers() {
 }
 
 async function changeClient(){
+    errorMessage.innerHTML = ""
     const clientId = idInput.value
     const clientName = changeName.value;
     const clientEmail = changeEmail.value;
@@ -109,13 +112,24 @@ async function changeClient(){
         return;
     }
     let IsAdmin;
-    if(clientRoles == "Admin"){
-      IsAdmin == true
-    }else if (clientRoles == "Not admin"){
-        IsAdmin == false
+    if(clientRoles == "admin"){
+      IsAdmin = true
+    }else if (clientRoles == "not admin"){
+        IsAdmin = false
+    }
+    
+    
+    if(!clientEmail == ""){
+    const isEmailValid = CheckValue(clientEmail,"check_email");
+    if(!isEmailValid){
+        errorMessage.textContent = "email invalido"
+        errorMessage.style.color = "red"
+        return;
+    }
     }
 
-    const confirmResult = confirm(`Are you sure to change the datas of the user ${clientId} ?`)
+    
+      const confirmResult = confirm(`Are you sure to change the datas of the user ${clientId} ?`)
     if(confirmResult){
       const Result = await fetch("http://localhost:5218/api/admin/users/change",{
         method: "POST",
@@ -132,10 +146,7 @@ async function changeClient(){
       if(!Result.ok){
         alert("the user with id" + clientId + "was not found")
       }else if(Result.ok){
-        successMessage.textContent = "user was successfully changed!"
-        setTimeout(()=>{
-          successMessage.innerHTML =""
-        },3000)
+        alert("the user was sucessfully updated!")
       } 
 
     }
@@ -144,15 +155,16 @@ async function changeClient(){
 saveChangesBtn.addEventListener("click",()=>{
     changeClient();
 })
+
 filterBTN.addEventListener("click",()=>{
   loadUsers()
 })
+
 LastPageBTN.addEventListener('click',()=>{
     page--;
     PageNumber.textContent = page
    loadUsers()
 })
-
 NextPageBTN.addEventListener('click',()=>{
     page++;
     PageNumber.textContent = page;

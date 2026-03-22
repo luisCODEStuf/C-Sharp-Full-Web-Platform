@@ -83,6 +83,13 @@ main.sidebar-hidden{
     transform: translateX(100%);
     transition: 0.3s ease-in;
 }
+.vertical-bar > h3{
+    margin-left: auto;
+    margin-right: auto;
+    text-transform: uppercase;
+    color: aquamarine;
+    letter-spacing: 1px;
+}
 .vertical-bar #id-separetor{
     height: 1px;
     width: 100%;

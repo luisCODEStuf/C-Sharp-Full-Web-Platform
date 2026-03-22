@@ -220,6 +220,13 @@ main.sidebar-hidden{
     border-top: none;
     margin-block: 15px;
 }
+.vertical-bar > h3{
+    margin-left: auto;
+    margin-right: auto;
+    text-transform: uppercase;
+    color: aquamarine;
+    letter-spacing: 1px;
+}
 .vertical-bar>input {
     width: 90%;
     height: 40px;
