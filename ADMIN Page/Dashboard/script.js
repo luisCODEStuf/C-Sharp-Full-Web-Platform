@@ -25,22 +25,6 @@ alternateBarBtn.addEventListener("click",()=>{
   verticalBar.classList.toggle("hidden")
 })
 
-// ============================================
-console.log('MainContainer:', MainContainer);
-console.log('GenUsers:', GenUsers);
-console.log('LastPageBTN:', LastPageBTN);        // ← Provavelmente NULL
-console.log('NextPageBTN:', NextPageBTN);        // ← Provavelmente NULL
-console.log('PageNumber:', PageNumber);
-console.log('Main:', Main);
-console.log('verticalBar:', verticalBar);
-console.log('idInput:', idInput);
-console.log('changeName:', changeName);
-console.log('changeEmail:', changeEmail);
-console.log('changeRoles:', changeRoles);
-console.log('saveChangesBtn:', saveChangesBtn);
-console.log('errorMessage:', errorMessage);
-console.log('alternateBarBtn:', alternateBarBtn);
-
 async function changeClient(){
     errorMessage.innerHTML = "";
     const clientId = idInput.value

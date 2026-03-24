@@ -457,4 +457,35 @@ app.MapPost("/api/admin/users/change", async (
 });
 
 
+app.MapGet("/products/all/{Page?}", async (AppDbContext db,int Page =1) =>
+{
+    var query = db.Products.AsQueryable();
+
+    query = query.OrderBy(p => p.Id);
+
+    var selectedProducts = await query.Skip((Page -1) * 20).Take(20).Select(p => new 
+    {
+        productId = p.Id,
+        productName = p.Name,
+        productDescription = p.Description,
+        productPrice = p.Price,
+        productStock = p.Stock,
+        orderCount = db.OrderItems
+                .Where(oi => oi.ProductId == p.Id)
+                .Select(oi => oi.OrderId)
+                .Distinct()  
+                .Count()
+    }).
+    ToListAsync();
+
+    return Results.Ok(new
+    {
+        sucess = true,
+        data = selectedProducts,
+    });
+
+});
+
+
+
 app.Run();
