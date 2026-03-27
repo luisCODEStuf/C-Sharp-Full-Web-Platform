@@ -5,8 +5,6 @@ using JwtBearer.Models.Register;
 using JwtBearer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http.HttpResults;
-using System.Data.SqlTypes;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,7 +58,7 @@ app.MapGet("/Users/all/filter/page{Page}", async (AppDbContext dbContext, int Pa
 
     return Results.Ok(new
     {
-        Sucess = true,
+        Success = true,
         Data = users
     });
 
@@ -238,33 +236,33 @@ app.MapGet("/api/admin/orders/filter/{Page?}", async
     .AsQueryable();
 
 
-    if (orderId != 0)
+    if (orderId.HasValue && orderId.Value != 0)
     {
-        query = query.Where(u => u.UserId == orderId);
+        query = query.Where(o => o.Id == orderId.Value);
     }
-    if (UserId != 0)
+    if (UserId.HasValue && UserId.Value != 0)
     {
-        query = query.Where(o => o.User.Id == UserId);
+        query = query.Where(o => o.User.Id == UserId.Value);
     }
-    if (UserNameOrEmail != null)
+    if (!string.IsNullOrEmpty(UserNameOrEmail))
     {
         query = query.Where(o => o.User.Name.Contains(UserNameOrEmail) || o.User.Email.Contains(UserNameOrEmail));
     }
-    if (OrderStatus != null)
+    if (!string.IsNullOrEmpty(OrderStatus))
     {
-        query = query.Where(o => o.Status.Contains(OrderStatus));
+        query = query.Where(o => o.Status == OrderStatus);
     }
-    if (SomeProductId != 0)
+    if (SomeProductId.HasValue && SomeProductId.Value != 0)
     {
-        query = query.Where(o => o.OrderItems.Any(o => o.Product.Id == SomeProductId));
+        query = query.Where(o => o.OrderItems.Any(oi => oi.Product.Id == SomeProductId.Value));
     }
-    if (SomeProductName != null)
+    if (!string.IsNullOrEmpty(SomeProductName))
     {
-        query = query.Where(o => o.OrderItems.Any(o => o.Product.Name.Contains(SomeProductName)));
+        query = query.Where(o => o.OrderItems.Any(oi => oi.Product.Name.Contains(SomeProductName)));
     }
-    if (productsQuantity != 0)
+    if (productsQuantity.HasValue && productsQuantity.Value != 0)
     {
-        query = query.Where(o => o.OrderItems.Count == productsQuantity);
+        query = query.Where(o => o.OrderItems.Count == productsQuantity.Value);
     }
 
     if (DateFrom.HasValue)
@@ -320,17 +318,22 @@ app.MapGet("/api/admin/orders/filter/{Page?}", async
     })
     .ToListAsync();
 
+    return Results.Ok(new
+    {
+        success = true,
+        ordersData = FilteredOrders
+    });
 });
 
 
 
-app.MapPost("/auth/register", (RegisterRequest request) =>
+app.MapPost("/auth/register", async (RegisterRequest request) =>
 {
     using (var scope = app.Services.CreateScope())
     {
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-        var existingUser = dbContext.Users.FirstOrDefault(u => u.Email == request.Email);
+        var existingUser = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
 
         if (existingUser != null)
         {
@@ -340,7 +343,7 @@ app.MapPost("/auth/register", (RegisterRequest request) =>
         {
             User newUser = new User { Name = request.Name, Email = request.Email, PasswordHash = request.Password };
             dbContext.Users.Add(newUser);
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
             return Results.Ok();
         }
     }
@@ -350,28 +353,34 @@ app.MapPost("/auth/register", (RegisterRequest request) =>
 
 app.MapPut("/api/admin/orders/update", async (AppDbContext db, UpdateOrder upOrder) =>
 {
+    if (string.IsNullOrEmpty(upOrder.NewState))
+    {
+        return Results.BadRequest("Status não pode ser vazio");
+    }
+
     HashSet<string> ValidStatuses = new(StringComparer.OrdinalIgnoreCase)
     {
-    "pending",
-    "processing",
-    "shipped",
-    "delivered",
-    "cancelled"
+        "pending",
+        "processing",
+        "shipped",
+        "delivered",
+        "cancelled"
     };
+    
     if (!ValidStatuses.Contains(upOrder.NewState))
     {
         return Results.BadRequest("Status inválido");
     }
     if (upOrder.Id == 0)
     {
-        return Results.BadRequest("Id invalido");
+        return Results.BadRequest("Id inválido");
     }
 
     Order? selectedOrder = await db.Orders.FindAsync(upOrder.Id);
 
     if (selectedOrder == null)
     {
-        return Results.BadRequest($"O pedido com o id {upOrder.Id} nao existe");
+        return Results.BadRequest($"O pedido com o id {upOrder.Id} não existe");
     }
 
     selectedOrder.Status = upOrder.NewState;
@@ -379,7 +388,7 @@ app.MapPut("/api/admin/orders/update", async (AppDbContext db, UpdateOrder upOrd
 
     await db.SaveChangesAsync();
 
-    return Results.Ok("status do pedido trocado com sucesso!");
+    return Results.Ok("Status do pedido trocado com sucesso!");
 });
 
 app.MapPost("/api/admin/users/change", async (
@@ -484,7 +493,7 @@ app.MapGet("/products/all/{Page?}", async (AppDbContext db, int Page = 1) =>
 
     return Results.Ok(new
     {
-        sucess = true,
+        success = true,
         data = selectedProducts,
     });
 
@@ -587,7 +596,7 @@ async
 
     return Results.Ok(new
     {
-        sucess = true,
+        success = true,
         data = selectedProducts,
         appliedFilters = new
         {
