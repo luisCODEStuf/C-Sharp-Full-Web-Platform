@@ -41,6 +41,7 @@ app.MapGet("/Users/all/filter/page{Page}", async (AppDbContext dbContext, int Pa
 
     query = query.OrderBy(u => u.Id);
 
+    var totalCount = await query.CountAsync();
 
     var users = await query
     .Skip((Page - 1) * 5)
@@ -55,13 +56,23 @@ app.MapGet("/Users/all/filter/page{Page}", async (AppDbContext dbContext, int Pa
     })
     .ToListAsync();
 
+    var totalPages = (int)Math.Ceiling(totalCount / (double)5);
 
     return Results.Ok(new
     {
         Success = true,
-        Data = users
+        Message = $"{totalCount} usuários encontrados",
+        Data = users,
+        Pagination = new
+        {
+            CurrentPage = Page,
+            PageSize = 5,
+            TotalCount = totalCount,
+            TotalPages = totalPages,
+            HasPreviousPage = Page > 1,
+            HasNextPage = Page < totalPages
+        }
     });
-
 });
 
 
@@ -175,7 +186,10 @@ app.MapGet("/api/admin/users/filter", async (
 
 app.MapGet("/api/admin/orders/all/{Page?}", async (AppDbContext db, int Page = 1) =>
 {
-    var orders = await db.Orders
+    var query = db.Orders.AsQueryable();
+    var totalCount = await query.CountAsync();
+    
+    var orders = await query
         .Include(o => o.User)
         .Include(o => o.OrderItems)
            .ThenInclude(oi => oi.Product)
@@ -202,10 +216,22 @@ app.MapGet("/api/admin/orders/all/{Page?}", async (AppDbContext db, int Page = 1
         .Take(2)
         .ToListAsync();
 
+    var totalPages = (int)Math.Ceiling(totalCount / (double)2);
+
     return Results.Ok(new
     {
-        success = true,
-        ordersData = orders
+        Success = true,
+        Message = $"{totalCount} pedidos encontrados",
+        OrdersData = orders,
+        Pagination = new
+        {
+            CurrentPage = Page,
+            PageSize = 2,
+            TotalCount = totalCount,
+            TotalPages = totalPages,
+            HasPreviousPage = Page > 1,
+            HasNextPage = Page < totalPages
+        }
     });
 });
 
@@ -295,6 +321,8 @@ app.MapGet("/api/admin/orders/filter/{Page?}", async
         _ => query.OrderBy(u => u.User.Name)
     };
 
+    var totalCount = await query.CountAsync();
+
     var FilteredOrders = await query
     .Skip((Page - 1) * 2)
     .Take(2)
@@ -318,10 +346,36 @@ app.MapGet("/api/admin/orders/filter/{Page?}", async
     })
     .ToListAsync();
 
+    var totalPages = (int)Math.Ceiling(totalCount / (double)2);
+
     return Results.Ok(new
     {
-        success = true,
-        ordersData = FilteredOrders
+        Success = true,
+        Message = $"{totalCount} pedidos filtrados",
+        OrdersData = FilteredOrders,
+        Pagination = new
+        {
+            CurrentPage = Page,
+            PageSize = 2,
+            TotalCount = totalCount,
+            TotalPages = totalPages,
+            HasPreviousPage = Page > 1,
+            HasNextPage = Page < totalPages
+        },
+        AppliedFilters = new
+        {
+            OrderId = orderId,
+            UserId = UserId,
+            UserNameOrEmail,
+            OrderStatus,
+            SomeProductId,
+            SomeProductName,
+            ProductsQuantity = productsQuantity,
+            DateFrom = DateFrom?.ToString("yyyy-MM-dd"),
+            DateTo = DateTo?.ToString("yyyy-MM-dd"),
+            SortBy,
+            Order
+        }
     });
 });
 
@@ -476,6 +530,8 @@ app.MapGet("/products/all/{Page?}", async (AppDbContext db, int Page = 1) =>
 
     query = query.OrderBy(p => p.Id);
 
+    var totalCount = await query.CountAsync();
+
     var selectedProducts = await query.Skip((Page - 1) * 20).Take(20).Select(p => new
     {
         productId = p.Id,
@@ -491,12 +547,23 @@ app.MapGet("/products/all/{Page?}", async (AppDbContext db, int Page = 1) =>
     }).
     ToListAsync();
 
+    var totalPages = (int)Math.Ceiling(totalCount / (double)20);
+
     return Results.Ok(new
     {
-        success = true,
-        data = selectedProducts,
+        Success = true,
+        Message = $"{totalCount} produtos encontrados",
+        Data = selectedProducts,
+        Pagination = new
+        {
+            CurrentPage = Page,
+            PageSize = 20,
+            TotalCount = totalCount,
+            TotalPages = totalPages,
+            HasPreviousPage = Page > 1,
+            HasNextPage = Page < totalPages
+        }
     });
-
 });
 
 app.MapGet("/api/admin/products/filter",
@@ -579,6 +646,8 @@ async
         _ => query.OrderBy(p => p.Name)
     };
 
+    var totalCount = await query.CountAsync();
+
     var selectedProducts = await query.Skip((page - 1) * 20).Take(20).Select(p => new
     {
         productId = p.Id,
@@ -591,28 +660,38 @@ async
                 .Select(oi => oi.OrderId)
                 .Distinct()
                 .Count()
-    }).
-    ToListAsync();
+    })
+    .ToListAsync();
+
+    var totalPages = (int)Math.Ceiling(totalCount / (double)20);
 
     return Results.Ok(new
     {
-        success = true,
-        data = selectedProducts,
-        appliedFilters = new
+        Success = true,
+        Message = $"{totalCount} produtos encontrados",
+        Data = selectedProducts,
+        Pagination = new
         {
-
-            pID = productId,
-            pSEARCH = Search,
-            pSTOCK = stock,
-            pPriceFrom = PriceFrom,
-            pPriceTo = PriceTo,
-            pDATEFROM = DateFrom,
-            pDATETO = DateTo,
-            pORDERCOUNT = order,
-            pSORTING = sortBy,
-            pPAGE = page,
-            pISACTIVE = isActive,
-
+            CurrentPage = page,
+            PageSize = 20,
+            TotalCount = totalCount,
+            TotalPages = totalPages,
+            HasPreviousPage = page > 1,
+            HasNextPage = page < totalPages
+        },
+        AppliedFilters = new
+        {
+            ProductId = productId,
+            Search,
+            Stock = stock,
+            PriceFrom,
+            PriceTo,
+            DateFrom,
+            DateTo,
+            Order = order,
+            SortBy = sortBy,
+            Page = page,
+            IsActive = isActive
         }
     });
 
