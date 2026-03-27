@@ -37,6 +37,11 @@ app.MapGet("/testing", () =>
 
 app.MapGet("/Users/all/filter/page{Page}", async (AppDbContext dbContext, int Page) =>
 {
+    if (Page < 1)
+    {
+        return Results.BadRequest(new { Success = false, Message = "Página deve ser maior ou igual a 1" });
+    }
+
     var query = dbContext.Users.AsQueryable();
 
     query = query.OrderBy(u => u.Id);
@@ -90,6 +95,33 @@ app.MapGet("/api/admin/users/filter", async (
 
 ) =>
 {
+    if (Page < 1)
+    {
+        return Results.BadRequest(new { Success = false, Message = "Página deve ser maior ou igual a 1" });
+    }
+    
+    if (PageSize < 1 || PageSize > 100)
+    {
+        return Results.BadRequest(new { Success = false, Message = "Tamanho da página deve ser entre 1 e 100" });
+    }
+    
+    var validSortFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "id", "name", "email", "createdat" };
+    if (!validSortFields.Contains(SortBy))
+    {
+        return Results.BadRequest(new { Success = false, Message = $"Ordenação por '{SortBy}' não é válida. Opções: id, name, email, createdat" });
+    }
+    
+    if (!string.Equals(Order, "asc", StringComparison.OrdinalIgnoreCase) && 
+        !string.Equals(Order, "desc", StringComparison.OrdinalIgnoreCase))
+    {
+        return Results.BadRequest(new { Success = false, Message = "Ordenação deve ser 'asc' ou 'desc'" });
+    }
+    
+    if (!string.IsNullOrEmpty(Search) && Search.Length > 100)
+    {
+        return Results.BadRequest(new { Success = false, Message = "Busca não pode exceder 100 caracteres" });
+    }
+
     var query = db.Users.AsQueryable();
 
 
@@ -186,6 +218,11 @@ app.MapGet("/api/admin/users/filter", async (
 
 app.MapGet("/api/admin/orders/all/{Page?}", async (AppDbContext db, int Page = 1) =>
 {
+    if (Page < 1)
+    {
+        return Results.BadRequest(new { Success = false, Message = "Página deve ser maior ou igual a 1" });
+    }
+
     var query = db.Orders.AsQueryable();
     var totalCount = await query.CountAsync();
     
@@ -254,6 +291,32 @@ app.MapGet("/api/admin/orders/filter/{Page?}", async
 
 ) =>
 {
+    if (Page < 1)
+    {
+        return Results.BadRequest(new { Success = false, Message = "Página deve ser maior ou igual a 1" });
+    }
+    
+    var validSortFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "id", "name", "email", "createdat" };
+    if (!validSortFields.Contains(SortBy))
+    {
+        return Results.BadRequest(new { Success = false, Message = $"Ordenação por '{SortBy}' não é válida. Opções: id, name, email, createdat" });
+    }
+    
+    if (!string.Equals(Order, "asc", StringComparison.OrdinalIgnoreCase) && 
+        !string.Equals(Order, "desc", StringComparison.OrdinalIgnoreCase))
+    {
+        return Results.BadRequest(new { Success = false, Message = "Ordenação deve ser 'asc' ou 'desc'" });
+    }
+    
+    if (!string.IsNullOrEmpty(UserNameOrEmail) && UserNameOrEmail.Length > 100)
+    {
+        return Results.BadRequest(new { Success = false, Message = "Nome ou email não pode exceder 100 caracteres" });
+    }
+    
+    if (!string.IsNullOrEmpty(SomeProductName) && SomeProductName.Length > 100)
+    {
+        return Results.BadRequest(new { Success = false, Message = "Nome do produto não pode exceder 100 caracteres" });
+    }
 
     var query = db.Orders
     .Include(u => u.User)
@@ -498,13 +561,9 @@ app.MapPost("/api/admin/users/change", async (
         userToChange.Email = changeUserRequest.Email;
     }
 
-    if (changeUserRequest.IsAdmin == true)
+    if (changeUserRequest.IsAdmin.HasValue)
     {
-        userToChange.IsAdmin = true;
-    }
-    else
-    {
-        userToChange.IsAdmin = false;
+        userToChange.IsAdmin = changeUserRequest.IsAdmin.Value;
     }
 
     await appDbContext.SaveChangesAsync();
@@ -526,6 +585,11 @@ app.MapPost("/api/admin/users/change", async (
 
 app.MapGet("/products/all/{Page?}", async (AppDbContext db, int Page = 1) =>
 {
+    if (Page < 1)
+    {
+        return Results.BadRequest(new { Success = false, Message = "Página deve ser maior ou igual a 1" });
+    }
+
     var query = db.Products.AsQueryable();
 
     query = query.OrderBy(p => p.Id);
@@ -584,6 +648,27 @@ async
 
 ) =>
 {
+    if (page < 1)
+    {
+        return Results.BadRequest(new { Success = false, Message = "Página deve ser maior ou igual a 1" });
+    }
+    
+    var validSortFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "id", "name", "createdat" };
+    if (!validSortFields.Contains(sortBy))
+    {
+        return Results.BadRequest(new { Success = false, Message = $"Ordenação por '{sortBy}' não é válida. Opções: id, name, createdat" });
+    }
+    
+    if (!string.Equals(order, "asc", StringComparison.OrdinalIgnoreCase) && 
+        !string.Equals(order, "desc", StringComparison.OrdinalIgnoreCase))
+    {
+        return Results.BadRequest(new { Success = false, Message = "Ordenação deve ser 'asc' ou 'desc'" });
+    }
+    
+    if (!string.IsNullOrWhiteSpace(Search) && Search.Length > 100)
+    {
+        return Results.BadRequest(new { Success = false, Message = "Busca não pode exceder 100 caracteres" });
+    }
 
     var query = db.Products.AsQueryable();
 
@@ -620,16 +705,27 @@ async
         case "false":
             query = query.Where(p => p.IsActive == false);
             break;
+        default:
+            return Results.BadRequest(new { Success = false, Message = "isActive deve ser 'all', 'true' ou 'false'" });
     }
     if (DateTime.TryParse(DateFrom, out var ParsedDateFrom))
     {
         var dateFromUtc = DateTime.SpecifyKind(ParsedDateFrom, DateTimeKind.Utc);
         query = query.Where(p => p.CreatedAt >= dateFromUtc);
     }
-    if (DateTime.TryParse(DateTo,out var ParsedDateTo))
+    else if (!string.IsNullOrEmpty(DateFrom))
+    {
+        return Results.BadRequest(new { Success = false, Message = $"Data inicial '{DateFrom}' é inválida. Use formato YYYY-MM-DD" });
+    }
+    
+    if (DateTime.TryParse(DateTo, out var ParsedDateTo))
     {
         var dateToUtc = DateTime.SpecifyKind(ParsedDateTo, DateTimeKind.Utc);
         query = query.Where(p => p.CreatedAt <= dateToUtc);
+    }
+    else if (!string.IsNullOrEmpty(DateTo))
+    {
+        return Results.BadRequest(new { Success = false, Message = $"Data final '{DateTo}' é inválida. Use formato YYYY-MM-DD" });
     }
 
     query = (sortBy.ToLower(), order.ToLower()) switch
