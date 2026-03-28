@@ -603,6 +603,9 @@ app.MapGet("/products/all/{Page?}", async (AppDbContext db, int Page = 1) =>
         productDescription = p.Description,
         productPrice = p.Price,
         productStock = p.Stock,
+        productCreatedAt = p.CreatedAt.ToString("dd/MM/yyyy HH:mm"),
+        productIsActive = p.IsActive,
+        ProductImageUrl = p.ImageUrl,
         orderCount = db.OrderItems
                 .Where(oi => oi.ProductId == p.Id)
                 .Select(oi => oi.OrderId)

@@ -1,0 +1,435 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+
+* {
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Roboto Mono", monospace;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+    background-color: rgb(37, 37, 37);
+    color: white;
+}
+
+header {
+    width: 100%;
+    height: 5vh;
+}
+
+header > nav {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-bottom: solid 1px aquamarine;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+header > nav > a {
+    text-decoration: none;
+    color: white;
+}
+
+header > nav > a:hover {
+    text-decoration: underline;
+}
+
+header > nav > #alternate-bar {
+    padding: 4px;
+    background-color: rgb(61, 61, 61);
+    border: none;
+    border-radius: 4px;
+    width: auto;
+    height: auto;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+header > nav > #alternate-bar:hover {
+    background-color: rgb(87, 87, 87);
+}
+
+header > nav > #return-page {
+    position: absolute;
+    top: 1vh;
+    left: 1vh;
+    width: 3vh;
+    height: 3vh;
+    background-color: transparent;
+    border: solid rgb(87, 87, 87) 1px;
+    color: aquamarine;
+    border-radius: 1vh;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    transition: 0.3s ease-in;
+    cursor: pointer;
+}
+
+header > nav > #return-page:hover {
+    background-color: rgb(87, 87, 87);
+}
+
+header > nav > #return-page > a {
+    color: aquamarine;
+    text-decoration: none;
+}
+
+main {
+    display: grid;
+    grid-template-columns: 1fr 30vw;
+    width: 100%;
+    height: 100vh;
+    margin-top: 2%;
+}
+
+main.sidebar-hidden {
+    grid-template-columns: 1fr 0px;
+    transition: grid-template-columns 0.3s ease-in;
+}
+
+.vertical-bar {
+    background-color: rgb(37, 37, 37);
+    width: 30vw;
+    position: fixed;
+    right: 0px;
+    top: 5vh;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 30px 20px;
+    border: none;
+    border-left: 2px solid aquamarine;
+    transform: 0.3s ease;
+    overflow-y: auto;
+}
+
+.vertical-bar.hidden {
+    transform: translateX(100%);
+    transition: 0.3s ease-in;
+}
+
+.vertical-bar > h3 {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    color: aquamarine;
+    letter-spacing: 2px;
+    font-size: 16px;
+    text-align: center;
+    border-bottom: 2px solid aquamarine;
+    padding-bottom: 15px;
+}
+
+.vertical-bar > label {
+    width: 100%;
+    color: aquamarine;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: block;
+}
+
+.vertical-bar > input,
+.vertical-bar > textarea {
+    width: 100%;
+    margin-bottom: 15px;
+    background-color: rgb(45, 45, 45);
+    border: solid rgb(80, 80, 80) 1px;
+    border-radius: 8px;
+    padding: 12px;
+    color: white;
+    font-family: "Roboto Mono", monospace;
+    font-size: 13px;
+    transition: 0.3s ease;
+}
+
+.vertical-bar > input:focus,
+.vertical-bar > textarea:focus {
+    outline: none;
+    border-color: aquamarine;
+    background-color: rgb(65, 65, 65);
+    box-shadow: 0 0 0 3px rgba(127, 255, 212, 0.15);
+}
+
+.vertical-bar > input[type="checkbox"] {
+    width: auto;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    accent-color: aquamarine;
+}
+
+.vertical-bar #id-separator {
+    height: 2px;
+    width: 100%;
+    background: linear-gradient(90deg, transparent, aquamarine, transparent);
+    border: none;
+    margin-block: 25px;
+}
+
+.vertical-bar > #save-changes {
+    background: linear-gradient(135deg, aquamarine, rgb(100, 200, 200));
+    margin-top: 40px;
+    margin-bottom: 20px;
+    width: 85%;
+    height: 50px;
+    border: none;
+    border-radius: 12px;
+    margin-left: auto;
+    margin-right: auto;
+    color: rgb(30, 30, 30);
+    font-weight: 700;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    box-shadow: 0 4px 12px rgba(127, 255, 212, 0.2);
+}
+
+.vertical-bar > #save-changes:hover {
+    background: linear-gradient(135deg, rgb(150, 255, 230), aquamarine);
+    box-shadow: 0 6px 20px rgba(127, 255, 212, 0.4);
+    transform: translateY(-2px);
+}
+
+.vertical-bar > #save-changes:active {
+    transform: translateY(0px);
+}
+
+.products-container {
+    display: flex;
+    flex-direction: column;
+    padding: 30px 20px;
+    overflow-y: auto;
+    height: calc(100vh - 5vh - 2%);
+}
+
+.products-container > #generate-products {
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    height: 7vh;
+    margin-bottom: 40px;
+    border: solid 1px rgb(87, 87, 87);
+    background-color:transparent;
+    border-radius: 1vh;
+    color: white;
+    font-family: "Roboto Mono", monospace;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+    font-size: clamp(15px,2vh,4vh);
+    transition: 0.3s ease;
+    padding: 15px;
+}
+.products-container > #generate-products:hover {
+    border: solid 2px aquamarine;
+    background: linear-gradient(135deg, rgba(127, 255, 212, 0.1), rgba(127, 255, 212, 0.05));
+    box-shadow: 0 0 20px rgba(127, 255, 212, 0.3);
+    color: white;
+}
+
+.products-container > #generate-products:active {
+    transform: scale(0.98);
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    width: 100%;
+    margin-bottom: 40px;
+    padding: 0 20px;
+}
+
+.product-box {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 95%;
+    height: auto;
+    padding: 15px;
+    gap: 12px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-block: 20px;
+    background-color: rgb(65, 65, 65);
+    border: solid rgb(87, 87, 87) 1px;
+    border-radius: 15px;
+    transition: 0.3s ease;
+    cursor: pointer;
+}
+
+.product-box:hover {
+    border: solid aquamarine 1px;
+    background-color: rgb(80, 80, 80);
+    box-shadow: 0 4px 12px rgba(127, 255, 212, 0.2);
+}
+
+.product-box > label {
+    font-weight: 700;
+    color: rgb(107, 107, 107);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size:medium;
+    margin: 0;
+}
+
+.product-box > label:first-of-type {
+    margin-top: 0;
+}
+
+.product-box > #product-infos > #product-image {
+    width: 40%;
+    height: 180px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: rgb(45, 45, 45);
+}
+
+.product-box >#product-image > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#product-infos {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    padding: 10px;
+    background-color: transparent;
+    border: none;
+    border-radius: 10px;
+    gap: 8px;
+}
+
+#product-texts-infos {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 50%;
+}
+
+
+#product-texts-infos > label {
+    font-weight: 700;
+    color: rgb(107, 107, 107);
+    font-size: 12px;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+#product-texts-infos > p {
+    color: white;
+    font-size: 16px;
+    margin: 0;
+    font-weight: 600;
+}
+
+#product-description {
+    width: 100%;
+    padding: 10px;
+    background-color: transparent;
+    border: none;
+    border-radius: 10px;
+}
+
+#product-description > p {
+    color: white;
+    font-size: 14px;
+    line-height: 1.5;
+    max-height: 70px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    margin: 0;
+}
+
+#product-status,
+#product-created-at {
+    width: 100%;
+    padding: 8px;
+    background-color: transparent;
+    border: none;
+    border-radius: 10px;
+}
+
+#product-status > p,
+#product-created-at > p {
+    color: white;
+    font-size: 15px;
+    margin: 0;
+    font-weight: 600;
+}
+
+.pages {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-block: 40px;
+    gap: 20px;
+    padding: 0 20px;
+}
+
+.pages > button {
+    height: 40px;
+    width: 40px;
+    background: linear-gradient(135deg, rgb(65, 65, 65), rgb(45, 45, 45));
+    border: solid 2px rgb(87, 87, 87);
+    border-radius: 8px;
+    color: aquamarine;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    transition: 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.pages > button:hover {
+    border: solid 2px aquamarine;
+    background: linear-gradient(135deg, aquamarine, rgb(100, 200, 200));
+    color: rgb(30, 30, 30);
+    box-shadow: 0 0 15px rgba(127, 255, 212, 0.3);
+}
+
+.pages > p {
+    color: aquamarine;
+    font-weight: 700;
+    font-size: 16px;
+    min-width: 30px;
+    text-align: center;
+}
+
+.loading,
+.no-products,
+.error {
+    text-align: center;
+    padding: 60px 20px;
+    color: aquamarine;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.error {
+    color: #ff6b6b;
+}

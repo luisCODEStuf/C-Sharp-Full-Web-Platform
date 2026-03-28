@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products Admin</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <button id="return-page"><a href="../../Dashboard/dashboard.html"><</a></button>
+            <a href="../../Products/index.html">Products</a>
+            <button id="alternate-bar"><i class="fa-solid fa-bars"></i></button>
+        </nav>
+    </header>
+
+    <main>
+        <div class="products-container">
+            <button id="generate-products">Render Products</button>
+
+            <div class="products-grid">    
+            </div>
+
+            <div class="pages">
+                <button id="last-page"><</button>
+                <p id="page">0</p>
+                <button id="next-page">></button>
+            </div>
+        </div>
+
+        <div class="vertical-bar">
+            <h3>Update Product</h3>
+
+            <label for="">Product Id</label>
+            <input type="text" id="product-id-input" placeholder="Product Id"> 
+            
+            <div id="id-separator"></div>
+
+            <label for="">Name</label>
+            <input type="text" id="product-name-input" placeholder="Product Name">
+
+            <label for="">Price</label>
+            <input type="number" id="product-price-input" placeholder="Price" step="0.01">
+
+            <label for="">Stock</label>
+            <input type="number" id="product-stock-input" placeholder="Stock">
+
+            <label for="">Description</label>
+            <textarea id="product-description-input" placeholder="Description" rows="4"></textarea>
+
+            <label for="">Image URL</label>
+            <input type="text" id="product-image-input" placeholder="Image URL">
+
+            <label for="">Active</label>
+            <input type="checkbox" id="product-active-input">
+
+            <button id="save-changes">Save Changes</button>
+        </div>
+    </main>
+    <script type="module" src="script.js"></script>
+</body>
+</html>
