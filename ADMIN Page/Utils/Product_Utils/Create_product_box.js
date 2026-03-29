@@ -28,44 +28,33 @@ export default function createProductBox(product) {
     `;
 
 
-    const descriptionLabel = document.createElement('label');
-    descriptionLabel.textContent = 'Description';
-
     const descriptionDiv = document.createElement('div');
     descriptionDiv.id = 'product-description';
     descriptionDiv.innerHTML = `
+        <label>Description:   </label>
         <p>${product.productDescription}</p>
     `;
 
 
-
-
-    const statusLabel = document.createElement('label');
-    statusLabel.textContent = 'Status';
-
     const statusDiv = document.createElement('div');
     statusDiv.id = 'product-status';
     statusDiv.innerHTML = `
+        <label>Status:   </label>
         <p>${product.productIsActive ? '✅ Active' : '❌ Inactive'}</p>
     `;
 
 
-    const createdAtLabel = document.createElement('label');
-    createdAtLabel.textContent = 'Created At';
-
     const createdAtDiv = document.createElement('div');
     createdAtDiv.id = 'product-created-at';
     createdAtDiv.innerHTML = `
+        <label>Created At:   </label>
         <p>${product.productCreatedAt}</p>
     `;
 
 
     productBox.appendChild(productInfos);
-    productBox.appendChild(descriptionLabel);
     productBox.appendChild(descriptionDiv);
-    productBox.appendChild(statusLabel);
     productBox.appendChild(statusDiv);
-    productBox.appendChild(createdAtLabel);
     productBox.appendChild(createdAtDiv);
 
     return productBox;

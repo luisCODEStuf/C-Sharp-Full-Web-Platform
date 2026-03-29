@@ -124,7 +124,6 @@ main.sidebar-hidden {
     letter-spacing: 2px;
     font-size: 16px;
     text-align: center;
-    border-bottom: 2px solid aquamarine;
     padding-bottom: 15px;
 }
 
@@ -140,8 +139,7 @@ main.sidebar-hidden {
     display: block;
 }
 
-.vertical-bar > input,
-.vertical-bar > textarea {
+.vertical-bar > input{
     width: 100%;
     margin-bottom: 15px;
     background-color: rgb(45, 45, 45);
@@ -152,6 +150,34 @@ main.sidebar-hidden {
     font-family: "Roboto Mono", monospace;
     font-size: 13px;
     transition: 0.3s ease;
+}
+
+.vertical-bar > textarea{
+    width: 100%;
+    margin-bottom: 15px;
+    background-color: rgb(45, 45, 45);
+    border: solid rgb(80, 80, 80) 1px;
+    border-radius: 8px;
+    padding-block: 30px;
+    padding-inline: 12px;
+    color: white;
+    font-family: "Roboto Mono", monospace;
+    font-size: 13px;
+    transition: 0.3s ease;
+    scroll-behavior:smooth;
+    resize: none;
+}
+
+.vertical-bar >textarea::-webkit-scrollbar {
+    background-color: transparent;
+    width: 12px;
+}
+
+.vertical-bar >textarea::-webkit-scrollbar-thumb {
+  background-color: aquamarine;
+  width: 8px;
+  border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
 }
 
 .vertical-bar > input:focus,
@@ -168,14 +194,17 @@ main.sidebar-hidden {
     margin-top: 10px;
     cursor: pointer;
     accent-color: aquamarine;
+    margin-left: 10px;
+    margin-right: auto;
 }
 
 .vertical-bar #id-separator {
     height: 2px;
     width: 100%;
     background: linear-gradient(90deg, transparent, aquamarine, transparent);
-    border: none;
-    margin-block: 25px;
+    border: solid aquamarine 1px;   
+    margin-top: 0;
+    margin-bottom: 25px;
 }
 
 .vertical-bar > #save-changes {
@@ -183,7 +212,7 @@ main.sidebar-hidden {
     margin-top: 40px;
     margin-bottom: 20px;
     width: 85%;
-    height: 50px;
+    padding: 15px;
     border: none;
     border-radius: 12px;
     margin-left: auto;
@@ -214,7 +243,15 @@ main.sidebar-hidden {
     padding: 30px 20px;
     overflow-y: auto;
     height: calc(100vh - 5vh - 2%);
+    scroll-behavior: smooth;
 }
+.products-container::-webkit-scrollbar {
+    background-color: transparent;
+}
+.products-container::-webkit-scrollbar-thumb {
+    background-color: aquamarine;
+}
+
 
 .products-container > #generate-products {
     margin-left: auto;
@@ -278,7 +315,7 @@ main.sidebar-hidden {
     box-shadow: 0 4px 12px rgba(127, 255, 212, 0.2);
 }
 
-.product-box > label {
+.product-box > div > label {
     font-weight: 700;
     color: rgb(107, 107, 107);
     letter-spacing: 1px;
@@ -293,7 +330,7 @@ main.sidebar-hidden {
 
 .product-box > #product-infos > #product-image {
     width: 40%;
-    height: 180px;
+    height:100%;
     margin-bottom: 10px;
     border-radius: 10px;
     overflow: hidden;
@@ -332,6 +369,8 @@ main.sidebar-hidden {
     font-size: 12px;
     letter-spacing: 1px;
     margin: 0;
+    text-transform: uppercase;
+    font-size: medium;
 }
 
 #product-texts-infos > p {
@@ -347,6 +386,8 @@ main.sidebar-hidden {
     background-color: transparent;
     border: none;
     border-radius: 10px;
+    display: flex;
+    flex-direction: row;
 }
 
 #product-description > p {
@@ -369,6 +410,8 @@ main.sidebar-hidden {
     background-color: transparent;
     border: none;
     border-radius: 10px;
+    display: flex;
+    flex-direction: row;
 }
 
 #product-status > p,
