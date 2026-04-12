@@ -797,4 +797,67 @@ async
 
 });
 
+app.MapPatch("/api/admin/products/update", async (AppDbContext db, UpdateProduct upProduct) =>
+{
+    if (upProduct.Id == 0)
+    {
+        return Results.BadRequest("Id do produto é obrigatório e deve ser maior que 0");
+    }
+
+    var productToUpdate = await db.Products.FindAsync(upProduct.Id);
+
+    if (productToUpdate == null)
+    {
+        return Results.NotFound(new { Success = false, Message = $"Produto com id {upProduct.Id} não encontrado" });
+    }
+
+    if (!string.IsNullOrWhiteSpace(upProduct.Name))
+    {
+        productToUpdate.Name = upProduct.Name;
+    }
+    if (!string.IsNullOrWhiteSpace(upProduct.Description))
+    {
+        productToUpdate.Description = upProduct.Description;
+    }
+    if (upProduct.Price.HasValue)
+    {
+        if (upProduct.Price.Value < 0)
+        {
+            return Results.BadRequest("Preço não pode ser negativo");
+        }
+        productToUpdate.Price = upProduct.Price.Value;
+    }
+    if (upProduct.Stock.HasValue)
+    {
+        if (upProduct.Stock.Value < 0)
+        {
+            return Results.BadRequest("Estoque não pode ser negativo");
+        }
+        productToUpdate.Stock = upProduct.Stock.Value;
+    }
+    if (!string.IsNullOrWhiteSpace(upProduct.ImageUrl))
+    {
+        productToUpdate.ImageUrl = upProduct.ImageUrl;
+    }
+    if (!string.IsNullOrWhiteSpace(upProduct.IsActive))
+    {
+        if(upProduct.IsActive.ToLower() == "active")
+        {
+            productToUpdate.IsActive = true;
+        }
+        else if (upProduct.IsActive.ToLower() == "notactive")
+        {
+            productToUpdate.IsActive = false;
+        }
+        else
+        {
+            return Results.BadRequest("IsActive deve ser 'active' ou 'notactive'");
+        }
+    }
+
+    await db.SaveChangesAsync();
+
+    return Results.Ok($"Produto {upProduct.Id} atualizado com sucesso!");
+});
+
 app.Run();
