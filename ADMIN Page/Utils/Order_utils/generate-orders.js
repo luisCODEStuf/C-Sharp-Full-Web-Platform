@@ -3,7 +3,10 @@ import createOrderBox from "../Order_utils/generate-order-box.js";
 export default async function generateOrderBoxes(container, apiUrl) {
     try {
 
-        container.innerHTML = '<p class="loading">Loading orders...</p>';
+        const loadingP = document.createElement('p');
+        loadingP.className = 'loading';
+        loadingP.textContent = 'Loading orders...';
+        container.replaceChildren(loadingP);
 
         const response = await fetch(apiUrl);
 
@@ -13,7 +16,7 @@ export default async function generateOrderBoxes(container, apiUrl) {
 
         const result = await response.json();
 
-        container.innerHTML = '';
+        container.replaceChildren();
 
         console.log(result);
         console.log(result.ordersData);
@@ -21,7 +24,10 @@ export default async function generateOrderBoxes(container, apiUrl) {
 
         // ✅ usar ordersData
         if (!result.ordersData || result.ordersData.length === 0) {
-            container.innerHTML = '<p class="no-orders">📭 No orders found</p>';
+            const noOrdersP = document.createElement('p');
+            noOrdersP.className = 'no-orders';
+            noOrdersP.textContent = '📭 No orders found';
+            container.appendChild(noOrdersP);
             return;
         }
 
@@ -41,13 +47,12 @@ export default async function generateOrderBoxes(container, apiUrl) {
 
     } catch (error) {
 
-        console.error('❌ Error loading orders:', error);
+        console.error('Error loading orders:', error);
 
-        container.innerHTML = `
-            <p class="error">
-                ❌ Error loading orders: ${error.message}
-            </p>
-        `;
+        const errorP = document.createElement('p');
+        errorP.className = 'error';
+        errorP.textContent = `Error loading orders: ${error.message}`;
+        container.replaceChildren(errorP);
     }
 }
 

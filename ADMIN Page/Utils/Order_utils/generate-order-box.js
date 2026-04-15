@@ -7,13 +7,18 @@ export default function createOrderBox(order) {
 
     const orderInfos = document.createElement('div');
     orderInfos.id = 'order-infos';
-    orderInfos.innerHTML = `
-        <label>Order id:</label>
-        <p>${order.id}</p>
-
-        <label>Total:</label>
-        <p>R$ ${order.total.toFixed(2)}</p>
-    `;
+    const orderIdLabel = document.createElement('label');
+    orderIdLabel.textContent = 'Order id:';
+    const orderIdP = document.createElement('p');
+    orderIdP.textContent = order.id;
+    const totalLabel = document.createElement('label');
+    totalLabel.textContent = 'Total:';
+    const totalP = document.createElement('p');
+    totalP.textContent = `R$ ${order.total.toFixed(2)}`;
+    orderInfos.appendChild(orderIdLabel);
+    orderInfos.appendChild(orderIdP);
+    orderInfos.appendChild(totalLabel);
+    orderInfos.appendChild(totalP);
 
 
     const userLabel = document.createElement('label');
@@ -22,18 +27,25 @@ export default function createOrderBox(order) {
 
     const userInfos = document.createElement('div');
     userInfos.id = 'user-infos';
-
-    userInfos.innerHTML = `
-        <div>
-            <label>Id:</label>
-            <p>${order.user.id}</p>
-        </div>
-
-        <div>
-            <label>Email:</label>
-            <p>${order.user.email}</p>
-        </div>
-    `;
+    
+    const userIdDiv = document.createElement('div');
+    const userIdLabel = document.createElement('label');
+    userIdLabel.textContent = 'Id:';
+    const userIdP = document.createElement('p');
+    userIdP.textContent = order.user.id;
+    userIdDiv.appendChild(userIdLabel);
+    userIdDiv.appendChild(userIdP);
+    
+    const userEmailDiv = document.createElement('div');
+    const userEmailLabel = document.createElement('label');
+    userEmailLabel.textContent = 'Email:';
+    const userEmailP = document.createElement('p');
+    userEmailP.textContent = order.user.email;
+    userEmailDiv.appendChild(userEmailLabel);
+    userEmailDiv.appendChild(userEmailP);
+    
+    userInfos.appendChild(userIdDiv);
+    userInfos.appendChild(userEmailDiv);
 
 
     const productsLabel = document.createElement('label');
@@ -78,13 +90,13 @@ export default function createOrderBox(order) {
 
     const orderState = document.createElement('div');
     orderState.id = 'order-state';
-
-    orderState.innerHTML = `
-        <p>
-            <span class="status-${order.status.toLowerCase()}"></span>
-            ${order.status}
-        </p>
-    `;
+    const statusP = document.createElement('p');
+    const statusSpan = document.createElement('span');
+    statusSpan.className = `status-${order.status.toLowerCase()}`;
+    const statusText = document.createTextNode(order.status);
+    statusP.appendChild(statusSpan);
+    statusP.appendChild(statusText);
+    orderState.appendChild(statusP);
 
 
     orderBox.appendChild(orderInfos);
@@ -106,27 +118,42 @@ function createProductDiv(product, index) {
     productDiv.className = 'product-item';
 
 
-    productDiv.innerHTML = `
-        <div>
-            <label>Id:</label>
-            <p>${product.productIdentifer}</p>
-        </div>
-
-        <div>
-            <label>Name:</label>
-            <p>${product.productName}</p>
-        </div>
-
-        <div>
-            <label>Price:</label>
-            <p>R$ ${product.productPrice.toFixed(2)}</p>
-        </div>
-
-        <div>
-            <label>Stock:</label>
-            <p>${product.productStock}</p>
-        </div>
-    `;
+    const prodIdDiv = document.createElement('div');
+    const prodIdLabel = document.createElement('label');
+    prodIdLabel.textContent = 'Id:';
+    const prodIdP = document.createElement('p');
+    prodIdP.textContent = product.productIdentifer;
+    prodIdDiv.appendChild(prodIdLabel);
+    prodIdDiv.appendChild(prodIdP);
+    
+    const prodNameDiv = document.createElement('div');
+    const prodNameLabel = document.createElement('label');
+    prodNameLabel.textContent = 'Name:';
+    const prodNameP = document.createElement('p');
+    prodNameP.textContent = product.productName;
+    prodNameDiv.appendChild(prodNameLabel);
+    prodNameDiv.appendChild(prodNameP);
+    
+    const prodPriceDiv = document.createElement('div');
+    const prodPriceLabel = document.createElement('label');
+    prodPriceLabel.textContent = 'Price:';
+    const prodPriceP = document.createElement('p');
+    prodPriceP.textContent = `R$ ${product.productPrice.toFixed(2)}`;
+    prodPriceDiv.appendChild(prodPriceLabel);
+    prodPriceDiv.appendChild(prodPriceP);
+    
+    const prodStockDiv = document.createElement('div');
+    const prodStockLabel = document.createElement('label');
+    prodStockLabel.textContent = 'Stock:';
+    const prodStockP = document.createElement('p');
+    prodStockP.textContent = product.productStock;
+    prodStockDiv.appendChild(prodStockLabel);
+    prodStockDiv.appendChild(prodStockP);
+    
+    productDiv.appendChild(prodIdDiv);
+    productDiv.appendChild(prodNameDiv);
+    productDiv.appendChild(prodPriceDiv);
+    productDiv.appendChild(prodStockDiv);
 
     return productDiv;
 }

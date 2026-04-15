@@ -16,18 +16,23 @@ let page = 0;
 
 
 async function ChangeOrder(){
+  if (isSubmittingOrder) return;
+  
   const isNumber = CheckValue(idInput.value,"check_number")
   const isStatusValid = CheckValue(stateInput.value,"check_order_status")
 
-  if(isNumber != NaN && isStatusValid){
+  if(isNumber && isStatusValid){
 
   let confirmAlert = confirm(`Are you sure to update the status of the order with id ${idInput.value}`)
 
    if (confirmAlert){
+    isSubmittingOrder = true;
+    SendChangesBtn.disabled = true;
     const Result = await fetch("http://localhost:5218/api/admin/orders/update",{
         method: "PUT",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "X-CSRF-Token": getCsrfToken()
         },
         body: JSON.stringify({
             Id: idInput.value,
@@ -39,6 +44,8 @@ async function ChangeOrder(){
     }else{
       alert("the order was sucessfully updated")
     }
+    isSubmittingOrder = false;
+    SendChangesBtn.disabled = false;
   }
   }
   if(!isNumber){
@@ -60,14 +67,16 @@ orderBTN.addEventListener("click",()=>{
 })
 
 lastPage.addEventListener("click",()=>{
-    page--
-    currentPage.innerHTML = page
-    generateOrderBoxes(orderContainer,`http://localhost:5218/api/admin/orders/all/${page}`)
-
+    if (page > 0) {
+        page--
+        currentPage.textContent = page
+        generateOrderBoxes(orderContainer,`http://localhost:5218/api/admin/orders/all/${page}`)
+    }
 })
 nextPage.addEventListener("click",()=>{
-    page++
-    currentPage.innerHTML = page
-    generateOrderBoxes(orderContainer,`http://localhost:5218/api/admin/orders/all/${page}`)
-
+    if (page < 1000) {
+        page++
+        currentPage.textContent = page
+        generateOrderBoxes(orderContainer,`http://localhost:5218/api/admin/orders/all/${page}`)
+    }
 })

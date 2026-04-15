@@ -36,12 +36,12 @@ async function attachProductClickListeners() {
         box.addEventListener("click", function() {
             const product = currentProducts.find(p => `product-${p.productId}` === box.id);
             if (product) {
-                productIdInput.value = product.productId;
-                productNameInput.value = product.productName;
-                productPriceInput.value = product.productPrice;
-                productStockInput.value = product.productStock;
-                productDescriptionInput.value = product.productDescription;
-                productImageInput.value = product.ProductImageUrl || product.productImageUrl;
+                productIdInput.value = product.productId || '';
+                productNameInput.value = product.productName || '';
+                productPriceInput.value = product.productPrice || '';
+                productStockInput.value = product.productStock || '';
+                productDescriptionInput.value = product.productDescription || '';
+                productImageInput.value = product.ProductImageUrl || product.productImageUrl || '';
                 productActiveInput.value = product.productIsActive ? "active" : "notactive";
             }
         });
@@ -56,20 +56,22 @@ alternateBar.addEventListener("click", () => {
 
 
 productBTN.addEventListener("click", async () => {
-    const apiUrl = "http://localhost:5218/products/all"; 
-    await generateProductsTable(productsContainer, apiUrl);
- 
-    const response = await fetch(apiUrl);
-    const result = await response.json();
+    try {
+        const response = await fetch(apiUrl);
+        if (response.ok) {
+            const result = await response.json();
+            currentProducts = result.data || result.products || result;
+            attachProductClickListeners();
+        }
+    } catch (error) {
+        console.error("Error loading products:", error);
+    }json();
     currentProducts = result.data || result.products || result;
     
     attachProductClickListeners();
 });
-
-
-
-
-saveChangesBtn.addEventListener("click", async () => {
+if (isSubmittingProduct) return;
+    
     const productId = productIdInput.value.trim();
     
     if (!productId) {
@@ -96,11 +98,45 @@ saveChangesBtn.addEventListener("click", async () => {
             IsActive: null
         };
         
-        if (productNameInput.value.trim()) updateData.Name = productNameInput.value.trim();
-        if (productPriceInput.value) updateData.Price = parseFloat(productPriceInput.value);
-        if (productStockInput.value) updateData.Stock = parseInt(productStockInput.value);
-        if (productDescriptionInput.value.trim()) updateData.Description = productDescriptionInput.value.trim();
-        if (productImageInput.value.trim()) updateData.ImageUrl = productImageInput.value.trim();
+        const nameValue = productNameInput.value.trim();
+        if (nameValue && nameValue.length <= 500) updateData.Name = nameValue;
+        
+        if (productPriceInput.value) {
+            const price = parseFloat(productPriceInput.value);
+            if (!isNaN(price) && price >= 0 && price <= 999999.99) {
+                updateData.Price = price;
+            } else {
+                alert("Invalid price (must be between 0 and 999999.99)");
+                return;
+            }
+        }
+        
+        if (productStockInput.value) {
+            const stock = parseInt(productStockInput.value);
+            if (!isNaN(stock) && stock >= 0 && stock <= 999999) {
+                updateData.Stock = stock;
+            } else {
+                alert("Invalid stock (must be between 0 and 999999)");
+                return;
+            }
+        }
+        
+        const descValue = productDescriptionInput.value.trim();
+        if (descValue && descValue.length <= 5000) updateData.Description = descValue;
+        else if (descValue && descValue.length > 5000) {
+            alert("Description is too long (max 5000 characters)");
+            return;
+        }
+        
+        const imageValue = productImageInput.value.trim();
+        if (imageValue) {
+            if (!isValidImageUrl(imageValue)) {
+                alert("Invalid image URL");
+                return;
+            }
+            updateData.ImageUrl = imageValue;
+        }
+        
         const activeValue = productActiveInput.value.trim().toLowerCase();
         if (activeValue === "active") {
             updateData.IsActive = "active";
@@ -108,6 +144,9 @@ saveChangesBtn.addEventListener("click", async () => {
             updateData.IsActive = "notactive";
         }
 
+        isSubmittingProduct = true;
+        saveChangesBtn.disabled = true;
+        
         try {
             const response = await fetch(`http://localhost:5218/api/admin/products/update`, {
                 method: "PATCH",
@@ -132,7 +171,6 @@ saveChangesBtn.addEventListener("click", async () => {
             alert("Error updating product: " + error.message);
         }
     }
-});
 
 
 function clearProductForm() {

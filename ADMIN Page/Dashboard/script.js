@@ -19,6 +19,7 @@ export const errorMessage = document.getElementById("email-error-message")
 
 const alternateBarBtn = document.getElementById('alternate-bar');
 
+let isSubmittingUser = false;
 
 alternateBarBtn.addEventListener("click",()=>{
   Main.classList.toggle("sidebar-hidden")
@@ -26,7 +27,9 @@ alternateBarBtn.addEventListener("click",()=>{
 })
 
 async function changeClient(){
-    errorMessage.innerHTML = "";
+    if (isSubmittingUser) return;
+    
+    errorMessage.textContent = "";
     const clientId = idInput.value
     const clientName = changeName.value;
     const clientEmail = changeEmail.value;
@@ -35,15 +38,15 @@ async function changeClient(){
     if(!Number(clientId)){
        return;
     }
-    if(clientName == "" &&
-        clientEmail == "" &&
-        clientRoles == ""  
+    if(clientName === "" &&
+        clientEmail === "" &&
+        clientRoles === ""  
     )
     {
         return;
     }
     
-    if(!clientEmail !== ""){
+    if(clientEmail !== ""){
     const isEmailValid = CheckValue(clientEmail,"check_email");
     if(!isEmailValid){
         errorMessage.textContent = "email invalido"
@@ -52,33 +55,48 @@ async function changeClient(){
     }
     }
 
-    let IsAdmin;
-    if(clientRoles == "Admin"){
+    let IsAdmin = null;
+    const roleNormalized = clientRoles.trim().toLowerCase();
+    if(roleNormalized === "admin"){
       IsAdmin = true
-    }else if (clientRoles == "Not admin"){
+    }else if (roleNormalized === "not admin" || roleNormalized === "false"){
         IsAdmin = false
     }
 
     const confirmResult = confirm(`Are you sure to change the datas of the user ${clientId} ?`)
     if(confirmResult){
-      const Result = await fetch("http://localhost:5218/api/admin/users/change",{
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            id: parseInt(clientId),
-            name: clientName,
-            email: clientEmail,
-            isAdmin: IsAdmin
-        })
-      }) 
-      if(!Result.ok){
-        alert("the user with id" + clientId + "was not found")
-      }else if(Result.ok){
-        alert("the user was sucessfully updated!")
-      } 
-
+      if (IsAdmin === null) {
+        alert("Please select a valid role: 'Admin' or 'Not admin'");
+        return;
+      }
+      
+      isSubmittingUser = true;
+      saveChangesBtn.disabled = true;
+      
+      try {
+        const Result = await fetch("http://localhost:5218/api/admin/users/change",{
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+              id: parseInt(clientId),
+              name: clientName,
+              email: clientEmail,
+              isAdmin: IsAdmin
+          })
+        }) 
+        if(!Result.ok){
+          alert("the user with id" + clientId + "was not found")
+        }else if(Result.ok){
+          alert("the user was sucessfully updated!")
+        }
+      } catch (error) {
+        alert("Error updating user: " + error.message);
+      } finally {
+        isSubmittingUser = false;
+        saveChangesBtn.disabled = false;
+      }
     }
 }
 
@@ -91,15 +109,19 @@ saveChangesBtn.addEventListener("click",()=>{
 let page = 1;
 
 LastPageBTN.addEventListener('click',()=>{
-    page--;
-    PageNumber.textContent = page
-    Generate_Users_Table(MainContainer,`http://localhost:5218/Users/all/filter/page${page}`)
+    if (page > 1) {
+        page--;
+        PageNumber.textContent = page
+        Generate_Users_Table(MainContainer,`http://localhost:5218/Users/all/filter/page${page}`)
+    }
 })
 
 NextPageBTN.addEventListener('click',()=>{
-    page++;
-    PageNumber.textContent = page
-    Generate_Users_Table(MainContainer,`http://localhost:5218/Users/all/filter/page${page}`)
+    if (page < 1000) {
+        page++;
+        PageNumber.textContent = page
+        Generate_Users_Table(MainContainer,`http://localhost:5218/Users/all/filter/page${page}`)
+    }
 })
 
 

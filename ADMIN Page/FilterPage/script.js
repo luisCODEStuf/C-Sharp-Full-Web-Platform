@@ -35,6 +35,7 @@ const filterBTN = document.getElementById("filter-btn")
 
 const alternateBarBtn = document.getElementById('alternate-bar');
 
+let isSubmittingUserFilter = false;
 
 const LastPageBTN = document.getElementById("last-page")
 const NextPageBTN = document.getElementById("next-page")
@@ -51,7 +52,7 @@ alternateBarBtn.addEventListener("click",()=>{
 
 async function loadUsers() {
     try {
-        UserContainer.innerHTML = ""
+        UserContainer.textContent = '';
         const params = new URLSearchParams();
         
         if (searchFilterInput.value) {
@@ -87,15 +88,22 @@ async function loadUsers() {
         params.append("Page",page)
      
     
-        Generate_Users_Table(UserContainer,`http://localhost:5218/api/admin/users/filter?${params}`)
-        
+        try {
+            await Generate_Users_Table(UserContainer,`http://localhost:5218/api/admin/users/filter?${params}`)
+        } catch (fetchError) {
+            const errorDiv = document.createElement('p');
+            errorDiv.textContent = 'Error loading users: ' + fetchError.message;
+            UserContainer.appendChild(errorDiv);
+        }
     } catch (error) {
-        console.error('Erro ao carregar usuários:', error);
+        console.error('Error loading users:', error);
     }
 }
 
 async function changeClient(){
-    errorMessage.innerHTML = ""
+    if (isSubmittingUserFilter) return;
+    
+    errorMessage.textContent = ""
     const clientId = idInput.value
     const clientName = changeName.value;
     const clientEmail = changeEmail.value;
@@ -104,22 +112,23 @@ async function changeClient(){
     if(!Number(clientId)){
        return;
     }
-    if(clientName == "" &&
-        clientEmail == "" &&
-        clientRoles == ""  
+    if(clientName === "" &&
+        clientEmail === "" &&
+        clientRoles === ""  
     )
     {
         return;
     }
-    let IsAdmin;
-    if(clientRoles == "admin"){
+    let IsAdmin = null;
+    const roleNormalized = clientRoles.trim().toLowerCase();
+    if(roleNormalized === "admin"){
       IsAdmin = true
-    }else if (clientRoles == "not admin"){
+    }else if (roleNormalized === "not admin" || roleNormalized === "false"){
         IsAdmin = false
     }
     
     
-    if(!clientEmail == ""){
+    if(clientEmail !== ""){
     const isEmailValid = CheckValue(clientEmail,"check_email");
     if(!isEmailValid){
         errorMessage.textContent = "email invalido"
@@ -131,24 +140,38 @@ async function changeClient(){
     
       const confirmResult = confirm(`Are you sure to change the datas of the user ${clientId} ?`)
     if(confirmResult){
-      const Result = await fetch("http://localhost:5218/api/admin/users/change",{
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            id: parseInt(clientId),
-            name: clientName,
-            email: clientEmail,
-            isAdmin: IsAdmin
-        })
-      }) 
-      if(!Result.ok){
-        alert("the user with id" + clientId + "was not found")
-      }else if(Result.ok){
-        alert("the user was sucessfully updated!")
-      } 
-
+      if (IsAdmin === null) {
+        alert("Please select a valid role: 'admin' or 'not admin'");
+        return;
+      }
+      
+      isSubmittingUserFilter = true;
+      saveChangesBtn.disabled = true;
+      
+      try {
+        const Result = await fetch("http://localhost:5218/api/admin/users/change",{
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+              id: parseInt(clientId),
+              name: clientName,
+              email: clientEmail,
+              isAdmin: IsAdmin
+          })
+        }) 
+        if(!Result.ok){
+          alert("the user with id" + clientId + "was not found")
+        }else if(Result.ok){
+          alert("the user was sucessfully updated!")
+        }
+      } catch (error) {
+        alert("Error updating user: " + error.message);
+      } finally {
+        isSubmittingUserFilter = false;
+        saveChangesBtn.disabled = false;
+      }
     }
 }
 
@@ -161,12 +184,16 @@ filterBTN.addEventListener("click",()=>{
 })
 
 LastPageBTN.addEventListener('click',()=>{
-    page--;
-    PageNumber.textContent = page
-   loadUsers()
+    if (page > 1) {
+        page--;
+        PageNumber.textContent = page
+        loadUsers()
+    }
 })
 NextPageBTN.addEventListener('click',()=>{
-    page++;
-    PageNumber.textContent = page;
-   loadUsers()    
+    if (page < 1000) {
+        page++;
+        PageNumber.textContent = page;
+        loadUsers()
+    }
 })
